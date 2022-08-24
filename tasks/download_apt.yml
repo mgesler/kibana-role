@@ -1,0 +1,14 @@
+---
+- name: "Download Kibana's deb"
+  get_url:
+    url: "http://10.2.25.120/kibana-{{ kibana_version }}-amd64.deb"
+    dest: "files/kibana-{{ kibana_version }}-amd64.deb"
+  register: download_kibana
+  delegate_to: localhost
+  until: download_kibana is succeeded
+  when: kibana_install_type == 'remote'
+- name: Copy Kibana's deb to managed node
+  copy:
+    src: "files/kibana-{{ kibana_version }}-amd64.deb"
+    mode: 0644
+    dest: "/tmp/kibana-{{ kibana_version }}-amd64.deb"
